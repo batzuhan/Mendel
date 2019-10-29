@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
@@ -9,6 +10,9 @@ public class Main {
         Chromosome chromosome = new Chromosome();
         loadData("Genetic Algorithm/depends.rsf", chromosome);
         loadDeps("Genetic Algorithm/depends.rsf", chromosome);
+        assignClusters(chromosome);
+        //showClusters(chromosome);
+        System.out.println(chromosome.toIntegerString());
     }
 
     public static void loadData(String filePath, Chromosome chromosome) throws FileNotFoundException {
@@ -57,5 +61,19 @@ public class Main {
         }
         scanner.close();
     }
-
+    public static void assignClusters(Chromosome chromosome){
+        Random random = new Random();
+        int k = random.nextInt(236);
+        for (Gene gene : chromosome.getPopulation())
+        {
+            gene.setCluster(random.nextInt(k));
+        }
+    }
+    public static void showClusters(Chromosome chromosome){
+        Random random = new Random();
+        for (Gene gene : chromosome.getPopulation())
+        {
+            System.out.println(gene.getName()+"     "+gene.getCluster());
+        }
+    }
 }

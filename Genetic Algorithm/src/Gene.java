@@ -3,6 +3,7 @@ import java.util.ArrayList;
 public class Gene {
     private String name;
     private ArrayList<Gene> dependsList;
+    private int cluster;
 
     public Gene(String name) {
         this.name = name;
@@ -13,11 +14,16 @@ public class Gene {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public ArrayList<Gene> getDependsList() {
         return dependsList;
+    }
+
+    public int getCluster() {
+        return cluster;
+    }
+
+    public void setCluster(int cluster) {
+        this.cluster = cluster;
     }
 }
