@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.Random;
 
 public class GeneticAlgorithm {
     private Chromosome[] population;
@@ -23,7 +24,8 @@ public class GeneticAlgorithm {
 
     }
 
-    public void mutation() {
-
+    public void mutation(Chromosome chromosome) {
+            Random random = new Random();
+            chromosome.getGeneArray().get(random.nextInt(236)).setCluster( random.nextInt(chromosome.getGeneArray().size()));
     }
 }
