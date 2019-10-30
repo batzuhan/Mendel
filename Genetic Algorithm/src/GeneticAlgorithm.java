@@ -1,33 +1,29 @@
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.Arrays;
 
 public class GeneticAlgorithm {
-    private Chromosome chromosome;
+    private Chromosome[] population;
 
-    public GeneticAlgorithm(Chromosome chromosome) {
-        this.chromosome = chromosome;
+    public GeneticAlgorithm(Chromosome[] population) {
+        this.population = population;
     }
 
-    /*public Chromosome createChromosome(Chromosome chromosome,int k){
-        Random random = new Random();
-        ArrayList<Gene> shortChromosome = new ArrayList<>();
-        for(int i=0; i<k; i++){
-            int randomPick = random.nextInt(chromosome.getGeneArray().size());
-            shortChromosome.add(chromosome.getGeneArray().get(randomPick));
-            chromosome.getGeneArray().remove(randomPick);
+    public String toIntegerString(Chromosome chromosome) {
+        int[] genes = new int[chromosome.getGeneArray().size()];
+        for (int i = 0; i < chromosome.getGeneArray().size(); i++) {
+            genes[i] = chromosome.getGeneArray().get(i).getCluster();
         }
-        Chromosome newChromosome = new Chromosome();
-        newChromosome.setGeneArray(shortChromosome);
-        return newChromosome;
-    }*/
+        return "Chromosome= " + Arrays.toString(genes) + "";
+    }
 
-    public void rouletteWheel(){
+    public void rouletteWheel() {
 
     }
-    public void crossOver(){
+
+    public void crossOver() {
 
     }
-    public void mutation(){
+
+    public void mutation() {
 
     }
 }
