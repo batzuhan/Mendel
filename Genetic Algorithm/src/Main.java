@@ -1,14 +1,30 @@
-import Modularity.Fitness;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
-        Fitness fitness = new Fitness();
-        double score = fitness.calculateFitnessScore();
-        int chromosomeCount = 50;
+        Chromosome[] population = initializePopulation(50, 50);
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(population, 50);
+        geneticAlgorithm.printPopulation();
+        int iterationLimit = 100;
+        int iteration = 0;
+        do {
+            ArrayList<Chromosome> fittestPair = geneticAlgorithm.selection();
+            //ArrayList<Chromosome> selectedPair = geneticAlgorithm.rouletteWheel();
+            Chromosome newChild = geneticAlgorithm.crossover(fittestPair);
+            boolean val = new Random().nextInt(250) == 0;
+            if (val) {
+                geneticAlgorithm.mutation(newChild);
+            }
+            geneticAlgorithm.addChild(newChild);
+
+            System.out.println(geneticAlgorithm.calculatePopulationFitness());
+            iteration++;
+        } while (iteration < iterationLimit);
+    }
+
+    public static Chromosome[] initializePopulation(int chromosomeCount, int clusterCount) throws FileNotFoundException {
         Chromosome[] population = new Chromosome[chromosomeCount];
         for (int i = 0; i < chromosomeCount; i++) {
             Chromosome baseChromosome = new Chromosome();
@@ -16,16 +32,13 @@ public class Main {
             loadDeps("Genetic Algorithm/depends.rsf", baseChromosome);
             population[i] = baseChromosome;
         }
-        int clusterCount = 50;
         for (int i = 0; i < chromosomeCount; i++) {
             assignClusters(population[i], clusterCount);
         }
-
-        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(population);
         for (int i = 0; i < chromosomeCount; i++) {
-            System.out.println(geneticAlgorithm.toIntegerString(population[i]));
+            updateInOutDeps(population[i]);
         }
-
+        return population;
     }
 
     public static void loadData(String filePath, Chromosome chromosome) throws FileNotFoundException {
@@ -82,4 +95,19 @@ public class Main {
             chromosome.getGeneArray().get(i).setCluster(random.nextInt(clusterCount));
         }
     }
+
+    public static void updateInOutDeps(Chromosome chromosome) {
+        for (int i = 0; i < chromosome.getGeneArray().size(); i++) {
+            for (int j = 0; j < chromosome.getGeneArray().get(i).getDependsList().size(); j++) {
+                if (chromosome.getGeneArray().get(i).getCluster() == chromosome.getGeneArray().get(i).getDependsList().get(j).getCluster()) {
+                    chromosome.getGeneArray().get(i).setInDepCount(chromosome.getGeneArray().get(i).getInDepCount() + 1);
+
+                } else {
+                    chromosome.getGeneArray().get(i).setOutDepCount(chromosome.getGeneArray().get(i).getOutDepCount() + 1);
+                }
+            }
+        }
+    }
+
+
 }
