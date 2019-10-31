@@ -1,9 +1,13 @@
+import Modularity.Fitness;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
+        Fitness fitness = new Fitness();
+        double score = fitness.calculateFitnessScore();
         int chromosomeCount = 50;
         Chromosome[] population = new Chromosome[chromosomeCount];
         for (int i = 0; i < chromosomeCount; i++) {
@@ -30,7 +34,7 @@ public class Main {
         Scanner scanner = new Scanner(file);
         scanner.useLocale(Locale.UK);
         while (scanner.hasNext()) {
-            String depends = scanner.next();
+            String depends = scanner.next(); //ignore
             String firstGene = scanner.next();
             String secondGene = scanner.next();
             if (!current.contains(firstGene)) {
@@ -53,7 +57,7 @@ public class Main {
         Scanner scanner = new Scanner(file);
         scanner.useLocale(Locale.UK);
         while (scanner.hasNext()) {
-            String depends = scanner.next();
+            String depends = scanner.next(); //ignore
             String firstGene = scanner.next();
             String secondGene = scanner.next();
             for (int i = 0; i < chromosome.getGeneArray().size(); i++) {

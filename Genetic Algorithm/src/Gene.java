@@ -14,7 +14,6 @@ public class Gene {
         return name;
     }
 
-
     public ArrayList<Gene> getDependsList() {
         return dependsList;
     }
