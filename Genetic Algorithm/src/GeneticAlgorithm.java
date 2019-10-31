@@ -20,7 +20,6 @@ public class GeneticAlgorithm {
                 fittest = i;
             }
         }
-        int secondFit = 0;
         ArrayList<Chromosome> selected = new ArrayList<>();
         selected.add(this.population[fittest]);
         selected.add(getSecondFittest());
@@ -69,23 +68,30 @@ public class GeneticAlgorithm {
         }
     }*/
 
-    public Chromosome crossover(ArrayList<Chromosome> fittestPair) {
+    public Chromosome[] crossover(ArrayList<Chromosome> fittestPair) {
         Chromosome chromosomeA = fittestPair.get(0);
         Chromosome chromosomeB = fittestPair.get(1);
         Random random = new Random();
-        double fatherPercentage = random.nextInt(41) + 30;
-        double motherPercentage = 100 - fatherPercentage;
+        int pivot = random.nextInt(41) + 30;
+
         ArrayList<Gene> childGeneArray = new ArrayList<>();
-        for (int i = 0; i < chromosomeA.getGeneArray().size(); i++) {
-            if (i < (chromosomeA.getGeneArray().size() * (fatherPercentage / 100))) {
-                childGeneArray.add(chromosomeA.getGeneArray().get(i));
-            } else {
-                childGeneArray.add(chromosomeB.getGeneArray().get(i));
-            }
+        ArrayList<Gene> secondChildGeneArray = new ArrayList<>();
+        for (int i = 0; i < pivot; i++) {
+            childGeneArray.add(chromosomeB.getGeneArray().get(i));
+            secondChildGeneArray.add(chromosomeA.getGeneArray().get(i));
+        }
+        for(int j=pivot; j<chromosomeA.getGeneArray().size(); j++){
+            childGeneArray.add(chromosomeA.getGeneArray().get(j));
+            secondChildGeneArray.add(chromosomeB.getGeneArray().get(j));
         }
         Chromosome childChromosome = new Chromosome();
         childChromosome.setGeneArray(childGeneArray);
-        return childChromosome;
+        Chromosome secondChildChromosome = new Chromosome();
+        secondChildChromosome.setGeneArray(secondChildGeneArray);
+        Chromosome[] chromosomePair = new Chromosome[2];
+        chromosomePair[0]=childChromosome;
+        chromosomePair[1]=secondChildChromosome;
+        return chromosomePair;
     }
 
     public void mutation(Chromosome chromosome) {

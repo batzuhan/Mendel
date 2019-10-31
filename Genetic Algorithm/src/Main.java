@@ -4,22 +4,31 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
-        Chromosome[] population = initializePopulation(50, 50);
-        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(population, 50);
-        geneticAlgorithm.printPopulation();
-        int iterationLimit = 100;
+        Random random = new Random();
+        int pickedNumber = 20;
+        Chromosome[] population = initializePopulation(10, pickedNumber);
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(population, pickedNumber);
+        //geneticAlgorithm.printPopulation();
+        int iterationLimit = 1000;
         int iteration = 0;
         do {
             ArrayList<Chromosome> fittestPair = geneticAlgorithm.selection();
             //ArrayList<Chromosome> selectedPair = geneticAlgorithm.rouletteWheel();
-            Chromosome newChild = geneticAlgorithm.crossover(fittestPair);
-            boolean val = new Random().nextInt(250) == 0;
-            if (val) {
-                geneticAlgorithm.mutation(newChild);
+            Chromosome[] newChildren = geneticAlgorithm.crossover(fittestPair);
+            Chromosome fittestChild = null;
+            if(newChildren[0].calculateFitness()>newChildren[1].calculateFitness()){
+                fittestChild = newChildren[0];
+            }else{
+                fittestChild = newChildren[1];
             }
-            geneticAlgorithm.addChild(newChild);
+            boolean val = new Random().nextInt(250) == 0;
+            System.out.println(val);
+            if (val) {
+                geneticAlgorithm.mutation(fittestChild);
+            }
+            geneticAlgorithm.addChild(fittestChild);
 
-            System.out.println(geneticAlgorithm.calculatePopulationFitness());
+            //System.out.println(geneticAlgorithm.selection().get(0).calculateFitness());
             iteration++;
         } while (iteration < iterationLimit);
     }
