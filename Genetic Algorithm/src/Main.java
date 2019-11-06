@@ -3,12 +3,12 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws Exception {
         Random random = new Random();
         int pickedNumber = 20;
         Chromosome[] population = initializePopulation(10, pickedNumber);
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(population, pickedNumber);
-        //geneticAlgorithm.printPopulation();
+        geneticAlgorithm.printPopulation();
         int iterationLimit = 1000;
         int iteration = 0;
         do {
@@ -16,41 +16,46 @@ public class Main {
             //ArrayList<Chromosome> selectedPair = geneticAlgorithm.rouletteWheel();
             Chromosome[] newChildren = geneticAlgorithm.crossover(fittestPair);
             Chromosome fittestChild = null;
-            if(newChildren[0].calculateFitness()>newChildren[1].calculateFitness()){
+            if (newChildren[0].calculateFitness() > newChildren[1].calculateFitness()) {
                 fittestChild = newChildren[0];
-            }else{
+            } else {
                 fittestChild = newChildren[1];
             }
-            boolean val = new Random().nextInt(250) == 0;
-            System.out.println(val);
+            boolean val = new Random().nextInt(25) == 0;
             if (val) {
                 geneticAlgorithm.mutation(fittestChild);
             }
             geneticAlgorithm.addChild(fittestChild);
 
-            //System.out.println(geneticAlgorithm.selection().get(0).calculateFitness());
+            System.out.println(geneticAlgorithm.selection().get(0).calculateFitness());
             iteration++;
         } while (iteration < iterationLimit);
     }
 
-    public static Chromosome[] initializePopulation(int chromosomeCount, int clusterCount) throws FileNotFoundException {
+    private static Chromosome[] initializePopulation(int chromosomeCount, int clusterCount) throws Exception {
         Chromosome[] population = new Chromosome[chromosomeCount];
+
+        Chromosome baseChromosome = new Chromosome();
+        loadData("Genetic Algorithm/depends.rsf", baseChromosome);
+        loadDeps("Genetic Algorithm/depends.rsf", baseChromosome);
+
         for (int i = 0; i < chromosomeCount; i++) {
-            Chromosome baseChromosome = new Chromosome();
-            loadData("Genetic Algorithm/depends.rsf", baseChromosome);
-            loadDeps("Genetic Algorithm/depends.rsf", baseChromosome);
-            population[i] = baseChromosome;
+            Chromosome tmpChromosome = new Chromosome();
+            tmpChromosome.setGeneArray(baseChromosome.getGeneArray());
+            population[i] = tmpChromosome;
         }
+
         for (int i = 0; i < chromosomeCount; i++) {
             assignClusters(population[i], clusterCount);
         }
+
         for (int i = 0; i < chromosomeCount; i++) {
             updateInOutDeps(population[i]);
         }
         return population;
     }
 
-    public static void loadData(String filePath, Chromosome chromosome) throws FileNotFoundException {
+    private static void loadData(String filePath, Chromosome chromosome) throws FileNotFoundException {
         ArrayList<String> current = new ArrayList<>();
         File file = new File(filePath);
         Scanner scanner = new Scanner(file);
@@ -73,7 +78,7 @@ public class Main {
         scanner.close();
     }
 
-    public static void loadDeps(String filePath, Chromosome chromosome) throws FileNotFoundException {
+    private static void loadDeps(String filePath, Chromosome chromosome) throws FileNotFoundException {
         ArrayList<String> current = new ArrayList<>();
         File file = new File(filePath);
         Scanner scanner = new Scanner(file);
@@ -91,21 +96,19 @@ public class Main {
                         }
                     }
                 }
-
             }
-
         }
         scanner.close();
     }
 
-    public static void assignClusters(Chromosome chromosome, int clusterCount) {
+    private static void assignClusters(Chromosome chromosome, int clusterCount) {
         Random random = new Random();
         for (int i = 0; i < chromosome.getGeneArray().size(); i++) {
             chromosome.getGeneArray().get(i).setCluster(random.nextInt(clusterCount));
         }
     }
 
-    public static void updateInOutDeps(Chromosome chromosome) {
+    private static void updateInOutDeps(Chromosome chromosome) {
         for (int i = 0; i < chromosome.getGeneArray().size(); i++) {
             for (int j = 0; j < chromosome.getGeneArray().get(i).getDependsList().size(); j++) {
                 if (chromosome.getGeneArray().get(i).getCluster() == chromosome.getGeneArray().get(i).getDependsList().get(j).getCluster()) {
@@ -117,6 +120,4 @@ public class Main {
             }
         }
     }
-
-
 }

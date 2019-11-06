@@ -67,4 +67,8 @@ public class Chromosome {
         return aux;
     }
 
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }
