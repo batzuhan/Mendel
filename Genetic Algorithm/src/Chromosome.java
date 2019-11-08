@@ -27,18 +27,14 @@ public class Chromosome {
         double sum = 0;
         double m2 = (2 * this.getNumberOfEdges());
 
-        Set<Gene> nodes = new HashSet<>();
-        for (int i = 0; i < geneArray.size(); ++i) {
-            nodes.add(geneArray.get(i));
-        }
-        for (Gene v1 : nodes) {
-            for (Gene v2 : nodes) {
-                if (!v1.equals(v2)) {
-                    sum += isNeighbor(v1, v2) - ((double) calculateDegree(v1) * (double) calculateDegree(v2) / m2);
-
+        for (int i = 0; i < geneArray.size()-1; i++) {
+            for (int j = i+1; j < geneArray.size(); j++) {
+                if (!geneArray.get(i).equals(geneArray.get(j))) {
+                    sum += isNeighbor(geneArray.get(i), geneArray.get(j)) - ((double) calculateDegree(geneArray.get(i)) * (double) calculateDegree(geneArray.get(j)) / m2);
                 }
             }
         }
+
         return sum / m2;
     }
 
