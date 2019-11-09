@@ -6,10 +6,10 @@ public class Main {
     public static void main(String[] args) throws Exception {
         Random random = new Random();
         int pickedNumber = 20;
-        Chromosome[] population = initializePopulation(10, pickedNumber);
+        Chromosome[] population = initializePopulation(2360, pickedNumber);
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(population, pickedNumber);
         geneticAlgorithm.printPopulation();
-        int iterationLimit = 1000;
+        int iterationLimit = 200 * 236;
         int iteration = 0;
         do {
             ArrayList<Chromosome> fittestPair = geneticAlgorithm.selection();
@@ -35,14 +35,13 @@ public class Main {
     private static Chromosome[] initializePopulation(int chromosomeCount, int clusterCount) throws Exception {
         Chromosome[] population = new Chromosome[chromosomeCount];
 
-        Chromosome baseChromosome = new Chromosome();
-        loadData("Genetic Algorithm/depends.rsf", baseChromosome);
-        loadDeps("Genetic Algorithm/depends.rsf", baseChromosome);
+
 
         for (int i = 0; i < chromosomeCount; i++) {
-            Chromosome tmpChromosome = new Chromosome();
-            tmpChromosome.setGeneArray(baseChromosome.getGeneArray());
-            population[i] = tmpChromosome;
+            Chromosome baseChromosome = new Chromosome();
+            loadData("Genetic Algorithm/depends.rsf", baseChromosome);
+            loadDeps("Genetic Algorithm/depends.rsf", baseChromosome);
+            population[i] = baseChromosome;
         }
 
         for (int i = 0; i < chromosomeCount; i++) {
