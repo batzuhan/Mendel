@@ -39,34 +39,26 @@ public class GeneticAlgorithm {
         }
         return this.population[maxFit2];
     }
-    /*public ArrayList<Chromosome> rouletteWheel(boolean naturalFitnessScores, int selectionSize) {
+    public Chromosome[] rouletteWheel(boolean naturalFitnessScores, int selectionSize) {
         Random random = new Random();
         double[] cumulativeFitnesses = new double[this.population.length];
-        cumulativeFitnesses[0] = getAdjustedFitness(this.population[0].getFitness(), naturalFitnessScores);
+        cumulativeFitnesses[0] = this.population[0].getFitness();
         for (int i = 1; i < this.population.length; i++) {
-            double fitness = getAdjustedFitness(this.population[i].getFitness(), naturalFitnessScores);
+            double fitness = this.population[i].getFitness();
             cumulativeFitnesses[i] = cumulativeFitnesses[i - 1] + fitness;
         }
 
-        ArrayList<Chromosome> selection = new ArrayList<>(selectionSize);
+        Chromosome[] selection = new Chromosome[selectionSize];
         for (int i = 0; i < selectionSize; i++) {
             double randomFitness = random.nextDouble() * cumulativeFitnesses[cumulativeFitnesses.length - 1];
             int index = Arrays.binarySearch(cumulativeFitnesses, randomFitness);
             if (index < 0) {
                 index = Math.abs(index + 1);
             }
-            selection.add(this.population[index]);
+            selection[i] = this.population[index];
         }
         return selection;
     }
-
-    private double getAdjustedFitness(double rawFitness, boolean naturalFitness) {
-        if (naturalFitness) {
-            return rawFitness;
-        } else {
-            return rawFitness == 0 ? Double.POSITIVE_INFINITY : 1 / rawFitness;
-        }
-    }*/
 
     public Chromosome[] crossover(ArrayList<Chromosome> fittestPair) {
         Chromosome chromosomeA = fittestPair.get(0);
