@@ -11,34 +11,24 @@ public class GeneticAlgorithm {
         this.clusterCount = clusterCount;
     }
 
-    public ArrayList<Chromosome> selection() {
+    public Chromosome[] selection() {
         int fittest = 0;
-        double max = Double.MIN_VALUE;
+        int secondFittest = 0;
         for (int i = 0; i < this.population.length; i++) {
-            if (this.population[i].calculateFitness() > max) {
-                max = this.population[i].calculateFitness();
+            if (this.population[i].getFitness() > this.population[fittest].getFitness()) {
+                secondFittest = fittest;
                 fittest = i;
+            } else if (this.population[i].getFitness() > this.population[secondFittest].getFitness()) {
+                secondFittest = i;
             }
         }
-        ArrayList<Chromosome> selected = new ArrayList<>();
-        selected.add(this.population[fittest]);
-        selected.add(getSecondFittest());
+        Chromosome[] selected = new Chromosome[2];
+        selected[0] = this.population[fittest];
+        selected[1] = this.population[secondFittest];
         return selected;
     }
 
-    public Chromosome getSecondFittest() {
-        int maxFit1 = 0;
-        int maxFit2 = 0;
-        for (int i = 0; i < this.population.length; i++) {
-            if (this.population[i].getFitness() > this.population[maxFit1].getFitness()) {
-                maxFit2 = maxFit1;
-                maxFit1 = i;
-            } else if (this.population[i].getFitness() > this.population[maxFit2].getFitness()) {
-                maxFit2 = i;
-            }
-        }
-        return this.population[maxFit2];
-    }
+
     public Chromosome[] rouletteWheel(boolean naturalFitnessScores, int selectionSize) {
         Random random = new Random();
         double[] cumulativeFitnesses = new double[this.population.length];
@@ -60,9 +50,9 @@ public class GeneticAlgorithm {
         return selection;
     }
 
-    public Chromosome[] crossover(ArrayList<Chromosome> fittestPair) {
-        Chromosome chromosomeA = fittestPair.get(0);
-        Chromosome chromosomeB = fittestPair.get(1);
+    public Chromosome crossover(Chromosome[] fittestPair) {
+        Chromosome chromosomeA = fittestPair[0];
+        Chromosome chromosomeB = fittestPair[1];
         Random random = new Random();
         int pivot = random.nextInt(41) + 30;
 
@@ -80,10 +70,13 @@ public class GeneticAlgorithm {
         childChromosome.setGeneArray(childGeneArray);
         Chromosome secondChildChromosome = new Chromosome();
         secondChildChromosome.setGeneArray(secondChildGeneArray);
-        Chromosome[] chromosomePair = new Chromosome[2];
-        chromosomePair[0]=childChromosome;
-        chromosomePair[1]=secondChildChromosome;
-        return chromosomePair;
+        Chromosome fittestChild = null;
+        if (childChromosome.calculateFitness() > secondChildChromosome.calculateFitness()) {
+            fittestChild = childChromosome;
+        } else {
+            fittestChild = secondChildChromosome;
+        }
+        return fittestChild;
     }
 
     public void mutation(Chromosome chromosome) {
@@ -123,5 +116,29 @@ public class GeneticAlgorithm {
             }
         }
         this.population[toDie] = newChild;
+    }
+
+    public static class Data{
+        private ArrayList<String> geneStrings;
+        private String[] first;
+        private String[] second;
+
+        public Data(ArrayList<String> geneStrings, String[] first, String[] second) {
+            this.geneStrings = geneStrings;
+            this.first = first;
+            this.second = second;
+        }
+
+        public ArrayList<String> getGeneStrings() {
+            return geneStrings;
+        }
+
+        public String[] getFirst() {
+            return first;
+        }
+
+        public String[] getSecond() {
+            return second;
+        }
     }
 }

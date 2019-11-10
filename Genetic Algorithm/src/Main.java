@@ -12,35 +12,26 @@ public class Main {
         int iterationLimit = 200 * 236;
         int iteration = 0;
         do {
-            ArrayList<Chromosome> fittestPair = geneticAlgorithm.selection();
+            Chromosome[] fittestPair = geneticAlgorithm.selection();
             //ArrayList<Chromosome> selectedPair = geneticAlgorithm.rouletteWheel();
-            Chromosome[] newChildren = geneticAlgorithm.crossover(fittestPair);
-            Chromosome fittestChild = null;
-            if (newChildren[0].calculateFitness() > newChildren[1].calculateFitness()) {
-                fittestChild = newChildren[0];
-            } else {
-                fittestChild = newChildren[1];
-            }
+            Chromosome fittestChild = geneticAlgorithm.crossover(fittestPair);
             boolean val = new Random().nextInt(25) == 0;
             if (val) {
                 geneticAlgorithm.mutation(fittestChild);
             }
             geneticAlgorithm.addChild(fittestChild);
 
-            System.out.println(geneticAlgorithm.selection().get(0).calculateFitness());
+            System.out.println(geneticAlgorithm.selection()[0].calculateFitness());
             iteration++;
         } while (iteration < iterationLimit);
     }
 
     private static Chromosome[] initializePopulation(int chromosomeCount, int clusterCount) throws Exception {
         Chromosome[] population = new Chromosome[chromosomeCount];
-
-
-
+        GeneticAlgorithm.Data data = loadData("Genetic Algorithm/depends.rsf");
         for (int i = 0; i < chromosomeCount; i++) {
             Chromosome baseChromosome = new Chromosome();
-            loadData("Genetic Algorithm/depends.rsf", baseChromosome);
-            loadDeps("Genetic Algorithm/depends.rsf", baseChromosome);
+            loadDeps(data, baseChromosome);
             population[i] = baseChromosome;
         }
 
@@ -54,42 +45,48 @@ public class Main {
         return population;
     }
 
-    private static void loadData(String filePath, Chromosome chromosome) throws FileNotFoundException {
+    private static GeneticAlgorithm.Data loadData(String filePath) throws FileNotFoundException {
         ArrayList<String> current = new ArrayList<>();
         File file = new File(filePath);
         Scanner scanner = new Scanner(file);
         scanner.useLocale(Locale.UK);
+        int count = 0;
+        while (scanner.hasNextLine()) {
+            count++;
+            scanner.nextLine();
+        }
+        String[] first = new String[count];
+        String[] second = new String[count];
+        int counter = 0;
+        scanner.close();
+        scanner = new Scanner(file);
+        scanner.useLocale(Locale.UK);
         while (scanner.hasNext()) {
             String depends = scanner.next(); //ignore
-            String firstGene = scanner.next();
-            String secondGene = scanner.next();
-            if (!current.contains(firstGene)) {
-                current.add(firstGene);
-                Gene gene = new Gene(firstGene);
-                chromosome.getGeneArray().add(gene);
+            first[counter] = scanner.next();
+            second[counter] = scanner.next();
+            if (!current.contains(first[counter])) {
+                current.add(first[counter]);
             }
-            if (!current.contains(secondGene)) {
-                current.add(secondGene);
-                Gene gene = new Gene(secondGene);
-                chromosome.getGeneArray().add(gene);
+            if (!current.contains(second[counter])) {
+                current.add(second[counter]);
             }
+            counter++;
         }
         scanner.close();
+        return new GeneticAlgorithm.Data(current, first, second);
     }
 
-    private static void loadDeps(String filePath, Chromosome chromosome) throws FileNotFoundException {
-        ArrayList<String> current = new ArrayList<>();
-        File file = new File(filePath);
-        Scanner scanner = new Scanner(file);
-        scanner.useLocale(Locale.UK);
-        while (scanner.hasNext()) {
-            String depends = scanner.next(); //ignore
-            String firstGene = scanner.next();
-            String secondGene = scanner.next();
+    private static void loadDeps(GeneticAlgorithm.Data data, Chromosome chromosome) {
+        for (String geneString : data.getGeneStrings()) {
+            Gene gene = new Gene(geneString);
+            chromosome.getGeneArray().add(gene);
+        }
+        for (int a = 0; a < data.getFirst().length; a++) {
             for (int i = 0; i < chromosome.getGeneArray().size(); i++) {
-                if (chromosome.getGeneArray().get(i).getName().equals(firstGene)) {
+                if (chromosome.getGeneArray().get(i).getName().equals(data.getFirst()[a])) {
                     for (int j = 0; j < chromosome.getGeneArray().size(); j++) {
-                        if (chromosome.getGeneArray().get(j).getName().equals(secondGene)) {
+                        if (chromosome.getGeneArray().get(j).getName().equals(data.getSecond()[a])) {
                             chromosome.getGeneArray().get(i).getDependsList().add(chromosome.getGeneArray().get(j));
                             chromosome.getGeneArray().get(j).getDependsList().add(chromosome.getGeneArray().get(i));
                         }
@@ -97,7 +94,6 @@ public class Main {
                 }
             }
         }
-        scanner.close();
     }
 
     private static void assignClusters(Chromosome chromosome, int clusterCount) {
