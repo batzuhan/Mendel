@@ -6,12 +6,12 @@ public class GeneticAlgorithm {
     private Chromosome[] population;
     private int clusterCount;
 
-    public GeneticAlgorithm(Chromosome[] population, int clusterCount) {
+    GeneticAlgorithm(Chromosome[] population, int clusterCount) {
         this.population = population;
         this.clusterCount = clusterCount;
     }
 
-    public Chromosome[] selection() {
+    Chromosome[] selection() {
         int fittest = 0;
         int secondFittest = 0;
         for (int i = 0; i < this.population.length; i++) {
@@ -50,7 +50,7 @@ public class GeneticAlgorithm {
         return selection;
     }
 
-    public Chromosome crossover(Chromosome[] fittestPair) {
+    Chromosome crossover(Chromosome[] fittestPair) {
         Chromosome chromosomeA = fittestPair[0];
         Chromosome chromosomeB = fittestPair[1];
         Random random = new Random();
@@ -62,7 +62,7 @@ public class GeneticAlgorithm {
             childGeneArray.add(chromosomeB.getGeneArray().get(i));
             secondChildGeneArray.add(chromosomeA.getGeneArray().get(i));
         }
-        for(int j=pivot; j<chromosomeA.getGeneArray().size(); j++){
+        for (int j = pivot; j < chromosomeA.getGeneArray().size(); j++) {
             childGeneArray.add(chromosomeA.getGeneArray().get(j));
             secondChildGeneArray.add(chromosomeB.getGeneArray().get(j));
         }
@@ -79,18 +79,18 @@ public class GeneticAlgorithm {
         return fittestChild;
     }
 
-    public void mutation(Chromosome chromosome) {
+    void mutation(Chromosome chromosome) {
         Random random = new Random();
         chromosome.getGeneArray().get(random.nextInt(chromosome.getGeneArray().size())).setCluster(random.nextInt(this.clusterCount));
     }
 
-    public void printPopulation() {
-        for (int i = 0; i < this.population.length; i++) {
-            System.out.println(this.toIntegerString(this.population[i]));
+    void printPopulation() {
+        for (Chromosome chromosome : this.population) {
+            Main.log.toFile(this.toIntegerString(chromosome));
         }
     }
 
-    public String toIntegerString(Chromosome chromosome) {
+    private String toIntegerString(Chromosome chromosome) {
         int[] genes = new int[chromosome.getGeneArray().size()];
         for (int i = 0; i < chromosome.getGeneArray().size(); i++) {
             genes[i] = chromosome.getGeneArray().get(i).getCluster();
@@ -106,7 +106,7 @@ public class GeneticAlgorithm {
         return cumulativeFitness;
     }
 
-    public void addChild(Chromosome newChild) {
+    void addChild(Chromosome newChild) {
         int toDie = 0;
         double min = Double.MAX_VALUE;
         for (int i = 0; i < this.population.length; i++) {
@@ -118,26 +118,26 @@ public class GeneticAlgorithm {
         this.population[toDie] = newChild;
     }
 
-    public static class Data{
+    static class Data {
         private ArrayList<String> geneStrings;
         private String[] first;
         private String[] second;
 
-        public Data(ArrayList<String> geneStrings, String[] first, String[] second) {
+        Data(ArrayList<String> geneStrings, String[] first, String[] second) {
             this.geneStrings = geneStrings;
             this.first = first;
             this.second = second;
         }
 
-        public ArrayList<String> getGeneStrings() {
+        ArrayList<String> getGeneStrings() {
             return geneStrings;
         }
 
-        public String[] getFirst() {
+        String[] getFirst() {
             return first;
         }
 
-        public String[] getSecond() {
+        String[] getSecond() {
             return second;
         }
     }

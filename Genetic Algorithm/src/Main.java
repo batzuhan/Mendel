@@ -1,15 +1,22 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.sql.Time;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Main {
+    public static Logger log;
+
     public static void main(String[] args) throws Exception {
-        Random random = new Random();
-        int pickedNumber = 20;
-        Chromosome[] population = initializePopulation(2360, pickedNumber);
-        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(population, pickedNumber);
+        log = new Logger();
+        GUI gui = new GUI();
+    }
+
+    static void initialize(String filePath, int populationCount, int iterationLimit, int clusterCount) throws Exception {
+        Chromosome[] population = initializePopulation(filePath, populationCount, clusterCount);
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(population, clusterCount);
         geneticAlgorithm.printPopulation();
-        int iterationLimit = 200 * 236;
         int iteration = 0;
         do {
             Chromosome[] fittestPair = geneticAlgorithm.selection();
@@ -20,15 +27,15 @@ public class Main {
                 geneticAlgorithm.mutation(fittestChild);
             }
             geneticAlgorithm.addChild(fittestChild);
-
-            System.out.println(geneticAlgorithm.selection()[0].calculateFitness());
+            log.toFile(Double.toString(geneticAlgorithm.selection()[0].calculateFitness()));
             iteration++;
         } while (iteration < iterationLimit);
+
     }
 
-    private static Chromosome[] initializePopulation(int chromosomeCount, int clusterCount) throws Exception {
+    private static Chromosome[] initializePopulation(String filePath, int chromosomeCount, int clusterCount) throws Exception {
         Chromosome[] population = new Chromosome[chromosomeCount];
-        GeneticAlgorithm.Data data = loadData("Genetic Algorithm/depends.rsf");
+        GeneticAlgorithm.Data data = loadData(filePath);
         for (int i = 0; i < chromosomeCount; i++) {
             Chromosome baseChromosome = new Chromosome();
             loadDeps(data, baseChromosome);
@@ -113,6 +120,30 @@ public class Main {
                     chromosome.getGeneArray().get(i).setOutDepCount(chromosome.getGeneArray().get(i).getOutDepCount() + 1);
                 }
             }
+        }
+    }
+
+    public static class Logger {
+        PrintWriter out;
+
+        Logger() {
+            try {
+                LocalDateTime now = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH.mm.ss");
+                String time = now.format(formatter);
+                File file = new File(time + ".txt");
+                if (file.createNewFile()) {
+                } else {
+                    System.out.println("File already exists.");
+                }
+                out = new PrintWriter(new FileWriter(file, true));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void toFile(String message) {
+            out.write(message + "\n");
         }
     }
 }
