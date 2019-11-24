@@ -25,6 +25,10 @@ public class GeneticAlgorithm {
         Chromosome[] selected = new Chromosome[2];
         selected[0] = this.population[fittest];
         selected[1] = this.population[secondFittest];
+
+        System.out.println("Selection is over....");
+        System.out.println("fittest = "+this.population[fittest].getFitness());
+        System.out.println("second fittest = "+this.population[secondFittest].getFitness());
         return selected;
     }
 
@@ -76,6 +80,7 @@ public class GeneticAlgorithm {
         } else {
             fittestChild = secondChildChromosome;
         }
+        System.out.println("Crossover is over.. Fittest is "+ fittestChild.getFitness());
         return fittestChild;
     }
 
@@ -115,6 +120,7 @@ public class GeneticAlgorithm {
                 toDie = i;
             }
         }
+        System.out.println("Changing "+this.population[toDie].calculateFitness() +" to "+newChild.getFitness());
         this.population[toDie] = newChild;
     }
 

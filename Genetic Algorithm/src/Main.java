@@ -24,6 +24,7 @@ public class Main {
             Chromosome fittestChild = geneticAlgorithm.crossover(fittestPair);
             boolean val = new Random().nextInt(25) == 0;
             if (val) {
+                System.out.println("Mutated");
                 geneticAlgorithm.mutation(fittestChild);
             }
             geneticAlgorithm.addChild(fittestChild);
