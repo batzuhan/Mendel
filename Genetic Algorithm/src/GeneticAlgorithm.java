@@ -120,8 +120,10 @@ public class GeneticAlgorithm {
                 toDie = i;
             }
         }
-        System.out.println("Changing "+this.population[toDie].calculateFitness() +" to "+newChild.getFitness());
-        this.population[toDie] = newChild;
+        System.out.println("Changing " + this.population[toDie].calculateFitness() + " to " + newChild.getFitness());
+        if (this.population[toDie].calculateFitness() < newChild.calculateFitness()){
+            this.population[toDie] = newChild;
+    }
     }
 
     static class Data {
