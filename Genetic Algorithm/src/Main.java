@@ -1,4 +1,7 @@
+import org.knowm.xchart.*;
+
 import java.io.*;
+import java.sql.Array;
 import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -7,7 +10,7 @@ import java.util.*;
 
 public class Main {
     public static Logger log;
-
+    private static double[] data;
     public static void main(String[] args) throws Exception {
         log = new Logger();
         GUI gui = new GUI();
@@ -15,6 +18,7 @@ public class Main {
 
     static void initialize(String filePath, int populationCount, int iterationLimit, int clusterCount) throws Exception {
         Chromosome[] population = initializePopulation(filePath, populationCount, clusterCount);
+        data = new double[iterationLimit];
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(population, clusterCount);
         geneticAlgorithm.printPopulation();
         int iteration = 0;
@@ -28,10 +32,12 @@ public class Main {
                 geneticAlgorithm.mutation(fittestChild);
             }
             geneticAlgorithm.addChild(fittestChild);
+            data[iteration] = (geneticAlgorithm.selection()[0].calculateFitness());
             log.toFile(Double.toString(geneticAlgorithm.selection()[0].calculateFitness()));
             iteration++;
         } while (iteration < iterationLimit);
 
+        toGraph();
     }
 
     private static Chromosome[] initializePopulation(String filePath, int chromosomeCount, int clusterCount) throws Exception {
@@ -122,6 +128,20 @@ public class Main {
                 }
             }
         }
+    }
+
+    private static void toGraph() throws IOException {
+        double[] xData = new double[data.length];
+        double[] yData = new double[data.length];
+        for(int i =0; i<data.length; i++){
+            yData[i] = i;
+            xData[i] = data[i];
+        }
+        XYChart chart = QuickChart.getChart("Sample Chart", "X", "Y", "y(x)", xData, yData);
+
+        //new SwingWrapper(chart).displayChart();
+
+        BitmapEncoder.saveBitmap(chart, "./Sample_Chart", BitmapEncoder.BitmapFormat.PNG);
     }
 
     public static class Logger {

@@ -53,6 +53,7 @@ public class GUI implements ActionListener {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+
             Main.log.out.close();
             System.exit(0);
         }
