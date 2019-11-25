@@ -15,20 +15,24 @@ public class GeneticAlgorithm {
         int fittest = 0;
         int secondFittest = 0;
         for (int i = 0; i < this.population.length; i++) {
+            System.out.println("-------------------------------------------------------");
+            System.out.println(this.population[i].getFitness()+" // "+this.population[i].toString());
             if (this.population[i].getFitness() > this.population[fittest].getFitness()) {
-                secondFittest = fittest;
                 fittest = i;
-            } else if (this.population[i].getFitness() > this.population[secondFittest].getFitness()) {
+            }
+        }
+        for (int i = 0; i < this.population.length; i++) {
+            if ((this.population[i].getFitness() > this.population[fittest].getFitness()) && (!this.population[i].equals(this.population[fittest]))) {
                 secondFittest = i;
             }
         }
         Chromosome[] selected = new Chromosome[2];
         selected[0] = this.population[fittest];
         selected[1] = this.population[secondFittest];
-
-        System.out.println("Selection is over....");
-        System.out.println("fittest = "+this.population[fittest].getFitness());
-        System.out.println("second fittest = "+this.population[secondFittest].getFitness());
+        System.out.println("-------------------------------------------------------");
+        System.out.println("The fittest = "+this.population[fittest].getFitness()+" //"+this.population[fittest].toString());
+        System.out.println("The second fittest = "+this.population[secondFittest].getFitness()+" //"+this.population[secondFittest].toString());
+        System.out.println("-------------------------------------------------------");
         return selected;
     }
 
@@ -74,13 +78,15 @@ public class GeneticAlgorithm {
         childChromosome.setGeneArray(childGeneArray);
         Chromosome secondChildChromosome = new Chromosome();
         secondChildChromosome.setGeneArray(secondChildGeneArray);
+        childChromosome.printArray();
+        secondChildChromosome.printArray();
         Chromosome fittestChild = null;
         if (childChromosome.calculateFitness() > secondChildChromosome.calculateFitness()) {
             fittestChild = childChromosome;
         } else {
             fittestChild = secondChildChromosome;
         }
-        System.out.println("Crossover is over.. Fittest is "+ fittestChild.getFitness());
+        System.out.println("Crossover is over.. Fittest is "+ fittestChild.getFitness() + " " + fittestChild.toString());
         return fittestChild;
     }
 

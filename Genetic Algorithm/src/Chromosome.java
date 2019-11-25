@@ -64,4 +64,10 @@ public class Chromosome {
     protected Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
+    public void printArray(){
+        for(Gene g : this.getGeneArray()){
+            System.out.print(g.getCluster()+" ");
+        }
+        System.out.println();
+    }
 }
