@@ -15,8 +15,6 @@ public class GeneticAlgorithm {
         int fittest = 0;
         int secondFittest = 0;
         for (int i = 0; i < this.population.length; i++) {
-            System.out.println("-------------------------------------------------------");
-            System.out.println(this.population[i].getFitness()+" // "+this.population[i].toString());
             if (this.population[i].getFitness() > this.population[fittest].getFitness()) {
                 fittest = i;
             }
@@ -29,10 +27,6 @@ public class GeneticAlgorithm {
         Chromosome[] selected = new Chromosome[2];
         selected[0] = this.population[fittest];
         selected[1] = this.population[secondFittest];
-        System.out.println("-------------------------------------------------------");
-        System.out.println("The fittest = "+this.population[fittest].getFitness()+" //"+this.population[fittest].toString());
-        System.out.println("The second fittest = "+this.population[secondFittest].getFitness()+" //"+this.population[secondFittest].toString());
-        System.out.println("-------------------------------------------------------");
         return selected;
     }
 
@@ -67,12 +61,32 @@ public class GeneticAlgorithm {
         ArrayList<Gene> childGeneArray = new ArrayList<>();
         ArrayList<Gene> secondChildGeneArray = new ArrayList<>();
         for (int i = 0; i < pivot; i++) {
-            childGeneArray.add(chromosomeB.getGeneArray().get(i));
-            secondChildGeneArray.add(chromosomeA.getGeneArray().get(i));
+            Gene newGeneA = new Gene(chromosomeB.getGeneArray().get(i).getName());
+            newGeneA.setCluster(chromosomeB.getGeneArray().get(i).getCluster());
+            newGeneA.setInDepCount(chromosomeB.getGeneArray().get(i).getInDepCount());
+            newGeneA.setOutDepCount(chromosomeB.getGeneArray().get(i).getOutDepCount());
+            newGeneA.setDependsList(chromosomeB.getGeneArray().get(i).getDependsList());
+            childGeneArray.add(newGeneA);
+            Gene newGeneB = new Gene(chromosomeA.getGeneArray().get(i).getName());
+            newGeneB.setCluster(chromosomeA.getGeneArray().get(i).getCluster());
+            newGeneB.setInDepCount(chromosomeA.getGeneArray().get(i).getInDepCount());
+            newGeneB.setOutDepCount(chromosomeA.getGeneArray().get(i).getOutDepCount());
+            newGeneB.setDependsList(chromosomeA.getGeneArray().get(i).getDependsList());
+            secondChildGeneArray.add(newGeneB);
         }
         for (int j = pivot; j < chromosomeA.getGeneArray().size(); j++) {
-            childGeneArray.add(chromosomeA.getGeneArray().get(j));
-            secondChildGeneArray.add(chromosomeB.getGeneArray().get(j));
+            Gene newGeneC = new Gene(chromosomeA.getGeneArray().get(j).getName());
+            newGeneC.setCluster(chromosomeA.getGeneArray().get(j).getCluster());
+            newGeneC.setInDepCount(chromosomeA.getGeneArray().get(j).getInDepCount());
+            newGeneC.setOutDepCount(chromosomeA.getGeneArray().get(j).getOutDepCount());
+            newGeneC.setDependsList(chromosomeA.getGeneArray().get(j).getDependsList());
+            childGeneArray.add(newGeneC);
+            Gene newGeneD = new Gene(chromosomeB.getGeneArray().get(j).getName());
+            newGeneD.setCluster(chromosomeB.getGeneArray().get(j).getCluster());
+            newGeneD.setInDepCount(chromosomeB.getGeneArray().get(j).getInDepCount());
+            newGeneD.setOutDepCount(chromosomeB.getGeneArray().get(j).getOutDepCount());
+            newGeneD.setDependsList(chromosomeB.getGeneArray().get(j).getDependsList());
+            secondChildGeneArray.add(newGeneD);
         }
         Chromosome childChromosome = new Chromosome();
         childChromosome.setGeneArray(childGeneArray);
@@ -86,18 +100,30 @@ public class GeneticAlgorithm {
         } else {
             fittestChild = secondChildChromosome;
         }
-        System.out.println("Crossover is over.. Fittest is "+ fittestChild.getFitness() + " " + fittestChild.toString());
         return fittestChild;
     }
 
     void mutation(Chromosome chromosome) {
         Random random = new Random();
-        chromosome.getGeneArray().get(random.nextInt(chromosome.getGeneArray().size())).setCluster(random.nextInt(this.clusterCount));
+        for (Gene var : chromosome.getGeneArray())
+        {
+            boolean val = new Random().nextInt(25) == 0;
+            if (val) {
+                System.out.println("Mutated");
+                var.setCluster(random.nextInt(this.clusterCount));
+            }
+
+        }
     }
 
     void printPopulation() {
         for (Chromosome chromosome : this.population) {
             Main.log.toFile(this.toIntegerString(chromosome));
+        }
+    }
+    void printArrayNumbers() {
+        for (Chromosome chromosome : this.population) {
+            Main.log.toFile(chromosome.getGeneArray().toString());
         }
     }
 

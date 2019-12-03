@@ -9,25 +9,25 @@ public class Chromosome {
     }
 
     public ArrayList<Gene> getGeneArray() {
-        return geneArray;
+        return this.geneArray;
     }
 
     public void setGeneArray(ArrayList<Gene> geneArray) {
         this.geneArray = geneArray;
     }
 
-    public double getFitness() {
+    public Double getFitness() {
         return calculateFitness();
     }
 
-    public double calculateFitness() {
-        double sum = 0;
-        double m2 = (2 * this.getNumberOfEdges());
+    public Double calculateFitness() {
+        Double sum = 0.0;
+        Double m2 = (double) (2 * this.getNumberOfEdges());
 
-        for (int i = 0; i < geneArray.size()-1; i++) {
-            for (int j = i+1; j < geneArray.size(); j++) {
-                if (!geneArray.get(i).equals(geneArray.get(j))) {
-                    sum += isNeighbor(geneArray.get(i), geneArray.get(j)) - ((double) calculateDegree(geneArray.get(i)) * (double) calculateDegree(geneArray.get(j)) / m2);
+        for (int i = 0; i < this.geneArray.size()-1; i++) {
+            for (int j = i+1; j < this.geneArray.size(); j++) {
+                if (!this.geneArray.get(i).equals(this.geneArray.get(j))) {
+                    sum += isNeighbor(this.geneArray.get(i), this.geneArray.get(j)) - ((double) calculateDegree(this.geneArray.get(i)) * (double) calculateDegree(this.geneArray.get(j)) / m2);
                 }
             }
         }
@@ -52,9 +52,9 @@ public class Chromosome {
 
     private int getNumberOfEdges() {
         int aux = 0;
-        for (int i = 0; i < geneArray.size(); ++i) {
-            aux += geneArray.get(i).getInDepCount();
-            aux += geneArray.get(i).getOutDepCount();
+        for (int i = 0; i < this.geneArray.size(); ++i) {
+            aux += this.geneArray.get(i).getInDepCount();
+            aux += this.geneArray.get(i).getOutDepCount();
 
         }
         return aux;

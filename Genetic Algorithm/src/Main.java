@@ -1,10 +1,7 @@
 import org.knowm.xchart.*;
 
 import java.io.*;
-import java.sql.Array;
-import java.sql.Time;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -26,18 +23,14 @@ public class Main {
             Chromosome[] fittestPair = geneticAlgorithm.selection();
             //ArrayList<Chromosome> selectedPair = geneticAlgorithm.rouletteWheel();
             Chromosome fittestChild = geneticAlgorithm.crossover(fittestPair);
-            boolean val = new Random().nextInt(25) == 0;
-            if (val) {
-                //System.out.println("Mutated");
-                geneticAlgorithm.mutation(fittestChild);
-            }
+            geneticAlgorithm.mutation(fittestChild);
             geneticAlgorithm.addChild(fittestChild);
             data[iteration] = (geneticAlgorithm.selection()[0].calculateFitness());
             log.toFile(Double.toString(geneticAlgorithm.selection()[0].calculateFitness()));
             iteration++;
             System.out.println("Iteration is done!" + iteration);
         } while (iteration < iterationLimit);
-        geneticAlgorithm.printPopulation();
+
         toGraph();
     }
 

@@ -43,4 +43,8 @@ public class Gene {
     public void setOutDepCount(int outDepCount) {
         this.outDepCount = outDepCount;
     }
+
+    public void setDependsList(ArrayList<Gene> dependsList) {
+        this.dependsList = dependsList;
+    }
 }
