@@ -8,12 +8,13 @@ import java.util.*;
 public class Main {
     public static Logger log;
     private static double[] data;
+
     public static void main(String[] args) throws Exception {
         log = new Logger();
         GUI gui = new GUI();
     }
 
-    static void initialize(String filePath, int populationCount, int iterationLimit, int clusterCount) throws Exception {
+    static void initialize(String filePath, int populationCount, int iterationLimit, int clusterCount, boolean mutation) throws Exception {
         Chromosome[] population = initializePopulation(filePath, populationCount, clusterCount);
         data = new double[iterationLimit];
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(population, clusterCount);
@@ -23,7 +24,14 @@ public class Main {
             Chromosome[] fittestPair = geneticAlgorithm.selection();
             //ArrayList<Chromosome> selectedPair = geneticAlgorithm.rouletteWheel();
             Chromosome fittestChild = geneticAlgorithm.crossover(fittestPair);
-            geneticAlgorithm.mutation(fittestChild);
+            if (mutation) {
+                geneticAlgorithm.mutation(fittestChild);
+            } else {
+                for (int i = 0; i < populationCount; i++) {
+                    updateInOutDeps(population[i]);
+                }
+                geneticAlgorithm.dependencyMutation(fittestChild);
+            }
             geneticAlgorithm.addChild(fittestChild);
             data[iteration] = (geneticAlgorithm.selection()[0].calculateFitness());
             log.toFile(Double.toString(geneticAlgorithm.selection()[0].calculateFitness()));
@@ -127,7 +135,7 @@ public class Main {
     private static void toGraph() throws IOException {
         double[] xData = new double[data.length];
         double[] yData = new double[data.length];
-        for(int i =0; i<data.length; i++){
+        for (int i = 0; i < data.length; i++) {
             xData[i] = i;
             yData[i] = data[i];
         }

@@ -105,9 +105,25 @@ public class GeneticAlgorithm {
 
     void mutation(Chromosome chromosome) {
         Random random = new Random();
-        for (Gene var : chromosome.getGeneArray())
-        {
+        for (Gene var : chromosome.getGeneArray()) {
             boolean val = new Random().nextInt(25) == 0;
+            if (val) {
+                System.out.println("Mutated");
+                var.setCluster(random.nextInt(this.clusterCount));
+            }
+
+        }
+    }
+
+    void dependencyMutation(Chromosome chromosome) {
+        Random random = new Random();
+        for (Gene var : chromosome.getGeneArray()) {
+            double out = var.getOutDepCount();
+            double in = var.getInDepCount();
+            double sum = in + out;
+            double probability = (out) / ((sum) * 100);
+
+            boolean val = new Random().nextDouble() < probability;
             if (val) {
                 System.out.println("Mutated");
                 var.setCluster(random.nextInt(this.clusterCount));
@@ -121,6 +137,7 @@ public class GeneticAlgorithm {
             Main.log.toFile(this.toIntegerString(chromosome));
         }
     }
+
     void printArrayNumbers() {
         for (Chromosome chromosome : this.population) {
             Main.log.toFile(chromosome.getGeneArray().toString());
@@ -153,9 +170,9 @@ public class GeneticAlgorithm {
             }
         }
         System.out.println("Changing " + this.population[toDie].calculateFitness() + " to " + newChild.getFitness());
-        if (this.population[toDie].calculateFitness() < newChild.calculateFitness()){
+        if (this.population[toDie].calculateFitness() < newChild.calculateFitness()) {
             this.population[toDie] = newChild;
-    }
+        }
     }
 
     static class Data {
