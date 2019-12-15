@@ -38,10 +38,10 @@ public class Main {
             geneticAlgorithm.addChild(fittestChild);
             data[iteration] = (geneticAlgorithm.selection()[0].calculateFitness());
             log.toFile(Double.toString(data[iteration]));
-            iteration++;
             Instant end = Instant.now();
             Duration timeElapsed = Duration.between(start, end);
-            System.out.println("Iteration is done! Iteration: " + iteration + " Time taken: "+ timeElapsed.toMillis() +" milliseconds");
+            System.out.println("Iteration is done! Iteration: " + iteration + " Time taken: "+ timeElapsed.toMillis() +" milliseconds. Fitness: "+data[iteration]);
+            iteration++;
         } while (iteration < iterationLimit);
 
         toGraph();
