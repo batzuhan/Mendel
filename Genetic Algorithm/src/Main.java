@@ -1,6 +1,8 @@
 import org.knowm.xchart.*;
 
 import java.io.*;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -18,9 +20,10 @@ public class Main {
         Chromosome[] population = initializePopulation(filePath, populationCount, clusterCount);
         data = new double[iterationLimit];
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(population, clusterCount);
-        geneticAlgorithm.printPopulation();
+        //geneticAlgorithm.printPopulation();
         int iteration = 0;
         do {
+            Instant start = Instant.now();
             Chromosome[] fittestPair = geneticAlgorithm.selection();
             //ArrayList<Chromosome> selectedPair = geneticAlgorithm.rouletteWheel();
             Chromosome fittestChild = geneticAlgorithm.crossover(fittestPair);
@@ -34,9 +37,11 @@ public class Main {
             }
             geneticAlgorithm.addChild(fittestChild);
             data[iteration] = (geneticAlgorithm.selection()[0].calculateFitness());
-            log.toFile(Double.toString(geneticAlgorithm.selection()[0].calculateFitness()));
+            log.toFile(Double.toString(data[iteration]));
             iteration++;
-            System.out.println("Iteration is done!" + iteration);
+            Instant end = Instant.now();
+            Duration timeElapsed = Duration.between(start, end);
+            System.out.println("Iteration is done! Iteration: " + iteration + " Time taken: "+ timeElapsed.toMillis() +" milliseconds");
         } while (iteration < iterationLimit);
 
         toGraph();

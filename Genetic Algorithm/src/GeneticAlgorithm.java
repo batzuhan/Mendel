@@ -16,11 +16,9 @@ public class GeneticAlgorithm {
         int secondFittest = 0;
         for (int i = 0; i < this.population.length; i++) {
             if (this.population[i].getFitness() > this.population[fittest].getFitness()) {
+                secondFittest = fittest;
                 fittest = i;
-            }
-        }
-        for (int i = 0; i < this.population.length; i++) {
-            if ((this.population[i].getFitness() > this.population[fittest].getFitness()) && (!this.population[i].equals(this.population[fittest]))) {
+            }else if ((this.population[i].getFitness() > this.population[secondFittest].getFitness()) && (!this.population[i].equals(this.population[fittest]))) {
                 secondFittest = i;
             }
         }
@@ -92,8 +90,6 @@ public class GeneticAlgorithm {
         childChromosome.setGeneArray(childGeneArray);
         Chromosome secondChildChromosome = new Chromosome();
         secondChildChromosome.setGeneArray(secondChildGeneArray);
-        childChromosome.printArray();
-        secondChildChromosome.printArray();
         Chromosome fittestChild = null;
         if (childChromosome.calculateFitness() > secondChildChromosome.calculateFitness()) {
             fittestChild = childChromosome;
@@ -108,7 +104,6 @@ public class GeneticAlgorithm {
         for (Gene var : chromosome.getGeneArray()) {
             boolean val = new Random().nextInt(25) == 0;
             if (val) {
-                System.out.println("Mutated");
                 var.setCluster(random.nextInt(this.clusterCount));
             }
 
@@ -125,7 +120,6 @@ public class GeneticAlgorithm {
 
             boolean val = new Random().nextDouble() < probability;
             if (val) {
-                System.out.println("Mutated");
                 var.setCluster(random.nextInt(this.clusterCount));
             }
 
@@ -169,7 +163,6 @@ public class GeneticAlgorithm {
                 toDie = i;
             }
         }
-        System.out.println("Changing " + this.population[toDie].calculateFitness() + " to " + newChild.getFitness());
         if (this.population[toDie].calculateFitness() < newChild.calculateFitness()) {
             this.population[toDie] = newChild;
         }

@@ -16,9 +16,9 @@ public class GUI implements ActionListener {
         frame.setSize(200, 190);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        population = new JTextField("50",10);
-        iteration = new JTextField("50",10);
-        cluster = new JTextField("20",10);
+        population = new JTextField("2360",10);
+        iteration = new JTextField("47200",10);
+        cluster = new JTextField("236",10);
         fileChooser = new JFileChooser("Genetic Algorithm/");
         JPanel inFieldPane = new JPanel();
         inFieldPane.setLayout(new GridLayout(3, 2));
